@@ -1,9 +1,4 @@
-function component() {
-  const element = document.createElement('div');
+import { App } from './App';
+import { $ } from './utils/domUtil';
 
-  element.innerHTML = `<p>Heeji TS 호잇? 뀨..</p>`;
-
-  return element;
-}
-
-document.body.appendChild(component());
+new App($('.App'));
