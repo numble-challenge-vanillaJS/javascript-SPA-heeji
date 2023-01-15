@@ -22,7 +22,6 @@ export const PostList = function (
   postList: Post[]
 ) {
   const $postList = document.createElement('ul');
-  $parent.appendChild($postList);
 
   this.state = postList;
 
@@ -35,6 +34,8 @@ export const PostList = function (
     if (!this.state) {
       return;
     }
+
+    $postList.innerHTML = '';
 
     $postList.innerHTML = `
       ${this.state
@@ -60,6 +61,8 @@ export const PostList = function (
         )
         .join('')}
     `;
+
+    $parent.appendChild($postList);
   };
 
   this.render();

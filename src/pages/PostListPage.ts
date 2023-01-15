@@ -21,12 +21,6 @@ interface IPostListPageConstructor {
 export const PostListPage = function (this: IPostListPage, $parent: Element) {
   const $el = document.createElement('main');
   $el.className = 'PostListPage';
-  $el.innerHTML = `
-    <main>
-      <h1>홈페이지</h1>
-      <button class="post__create-btn">글 작성하기</button>
-    </main>
-  `;
 
   this.setState = (value: Post[]) => {
     this.state = value;
@@ -45,6 +39,10 @@ export const PostListPage = function (this: IPostListPage, $parent: Element) {
   fetchPostList();
 
   this.render = () => {
+    $el.innerHTML = `
+      <h1>홈페이지</h1>
+      <button class="post__create-btn">글 작성하기</button>
+    `;
     new PostList($el, this.state);
     $parent.appendChild($el);
   };
