@@ -1,3 +1,4 @@
+import { PostService } from '../api/PostService';
 import { navigate } from '../router';
 import { Post } from '../types/Post';
 import { formatDate } from '../utils/dateUtil';
@@ -58,7 +59,7 @@ export const PostDetail = function (
       <p>${post.content}</p>
 
       <button class="post__detail__edit-btn">수정하기</button>
-      <button>삭제하기</button>
+      <button class="post__detail__delete-btn">삭제하기</button>
     `;
 
     $parent.appendChild($postDetail);
@@ -68,10 +69,24 @@ export const PostDetail = function (
 
   this.eventHandler = (ev: MouseEvent) => {
     const target = ev.target as HTMLElement;
+
     if (target.className === 'post__detail__edit-btn') {
       navigate('/edit-post', {
         detail: post,
       });
+    }
+
+    if (target.className === 'post__detail__delete-btn') {
+      if (!confirm('정말 지우시겠습니까?')) {
+        return;
+      }
+
+      (async () => {
+        const result = await PostService.deletePost(post.postId);
+        if (result) {
+          navigate('/', null);
+        }
+      })();
     }
   };
 
