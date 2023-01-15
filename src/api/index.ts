@@ -16,4 +16,8 @@ export namespace apiService {
   export async function patch<T>(url: string, data: any) {
     return axiosInstance.patch<T>(url, data);
   }
+
+  export async function _delete<T>(url: string) {
+    return axiosInstance.delete<T>(url);
+  }
 }

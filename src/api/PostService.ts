@@ -78,4 +78,11 @@ export namespace PostService {
       .patch<FetchPostDetailResponse>(`/post/${postId}`, body)
       .then(v => v.data);
   }
+
+  /**
+   * 글을 삭제합니다.
+   */
+  export async function deletePost(postId: string) {
+    return apiService._delete(`/post/${postId}`).then(v => v.data);
+  }
 }
