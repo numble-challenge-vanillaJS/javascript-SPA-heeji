@@ -51,7 +51,12 @@ export const PostListPage = function (this: IPostListPage, $parent: Element) {
     const target = ev?.target as HTMLElement;
     const isBtnClicked = target.className === 'post__create-btn';
     if (isBtnClicked) {
-      navigate('/create-post', null);
+      // FIXME: 제거
+      navigate('/create-post', {
+        detail: {
+          name: 'dog',
+        },
+      });
     }
   });
 } as unknown as IPostListPageConstructor;

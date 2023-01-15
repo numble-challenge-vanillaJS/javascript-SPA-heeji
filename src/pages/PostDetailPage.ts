@@ -1,13 +1,10 @@
-const postDetailHTML = (postID: string) => {
-  return `
-      <main>
-        <h1>글 상세 페이지</h1>
-        <p>${postID}</p>
-      </main>
-      `;
-};
+import { PostService } from '../api/PostService';
+import { PostDetail } from '../components/PostDetail';
+import { Post } from '../types/Post';
 
 interface IPostDetailPage {
+  state: Post;
+  setState: (value: Post) => void;
   render: () => void;
 }
 
@@ -28,11 +25,29 @@ export const PostDetailPage = function (
 ) {
   const $el = document.createElement('main');
   $el.className = 'PostDetailPage';
-  $el.innerHTML = postDetailHTML(postID);
+
+  this.setState = value => {
+    this.state = value;
+    this.render();
+  };
 
   this.render = () => {
-    $parent.appendChild($el);
+    $el.innerHTML = '<h1>글 상세 페이지</h1>';
+
+    if (!this.state) {
+      $el.innerHTML = '로딩중!';
+    } else {
+      new PostDetail($el, this.state);
+      $parent.appendChild($el);
+    }
   };
+
+  const fetchPostDetail = async () => {
+    const result = await PostService.fetchPost(postID);
+    this.setState({ ...this.state, ...result.data.post });
+  };
+
+  fetchPostDetail();
 
   this.render();
 } as unknown as IPostDetailPageConstructor;
