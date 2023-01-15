@@ -19,7 +19,7 @@ export const App = function (this: IApp, $parent: Element) {
     $parent.innerHTML = '';
 
     if (pathname === '/') {
-      new PostListPage($parent);
+      new PostListPage($parent).render();
     } else if (pathname.indexOf('/post/') === 0) {
       const [, , postID] = pathname.split('/');
       new PostDetailPage($parent, postID);

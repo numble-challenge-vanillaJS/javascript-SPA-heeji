@@ -1,3 +1,4 @@
+import { navigate } from '../router';
 import { Post } from '../types/Post';
 
 interface IPostList {
@@ -39,11 +40,19 @@ export const PostList = function (
       ${this.state
         .map(
           item => `
-            <li class="product">
+            <li class="product" data-post-id="${item.postId}">
               <div>
-                <img src="${item.image}" width="100px" height="100px" />
+                <img 
+                  src="${item.image}" 
+                  alt="${item.postId} image" 
+                  onError="this.src='https://img.freepik.com/premium-vector/magnifying-glass-404-isolated-white-background-vector-illustration_230920-1218.jpg?w=826';"
+                  width="100px" 
+                  height="100px" 
+                />
                 <p>
                   <h4>${item.title}</h4>
+                  <p>${item.content}</p>
+
                 </p>
               </div>
             </li>
@@ -54,4 +63,15 @@ export const PostList = function (
   };
 
   this.render();
+
+  $postList.addEventListener('click', (ev: MouseEvent) => {
+    const target = ev?.target as HTMLElement;
+    const $li = target.closest('li');
+
+    const { postId } = $li.dataset;
+
+    if (postId) {
+      navigate(`/post/${postId}`, null);
+    }
+  });
 } as unknown as IPostListConstructor;
