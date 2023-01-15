@@ -8,4 +8,8 @@ export namespace apiService {
   export async function get<T>(url: string, params: any = null) {
     return axiosInstance.get<T>(url, { ...params });
   }
+
+  export async function post<T>(url: string, data: any) {
+    return axiosInstance.post<T>(url, data);
+  }
 }
