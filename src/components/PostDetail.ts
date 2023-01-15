@@ -1,8 +1,10 @@
+import { navigate } from '../router';
 import { Post } from '../types/Post';
 import { formatDate } from '../utils/dateUtil';
 
 interface IPostDetail {
   state: Post;
+  eventHandler: (ev: MouseEvent) => void;
   setState: (value: Post) => void;
   render: () => void;
 }
@@ -55,7 +57,7 @@ export const PostDetail = function (
       <p>${formatDate(new Date(post.createdAt))}</p>
       <p>${post.content}</p>
 
-      <button>수정하기</button>
+      <button class="post__detail__edit-btn">수정하기</button>
       <button>삭제하기</button>
     `;
 
@@ -63,4 +65,15 @@ export const PostDetail = function (
   };
 
   this.render();
+
+  this.eventHandler = (ev: MouseEvent) => {
+    const target = ev.target as HTMLElement;
+    if (target.className === 'post__detail__edit-btn') {
+      navigate('/edit-post', {
+        detail: post,
+      });
+    }
+  };
+
+  $postDetail.addEventListener('click', this.eventHandler);
 } as unknown as IPostDetailConstructor;

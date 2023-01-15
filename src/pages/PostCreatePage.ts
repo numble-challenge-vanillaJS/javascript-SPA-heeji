@@ -1,10 +1,13 @@
 import { CreatePostRequest, PostService } from '../api/PostService';
-import { navigate } from '../router';
+import { goBack, navigate } from '../router';
+import { Post } from '../types/Post';
 import { $ } from '../utils/domUtil';
 
-const postCreateHTML = (post: CreatePostRequest) => {
+type ModeType = 'create' | 'edit';
+
+const postCreateHTML = (mode: ModeType, post: CreatePostRequest) => {
   return `
-    <h1>글 작성 페이지</h1>
+    <h1>${mode === 'create' ? '글 작성 페이지' : '글 수정 페이지'}</h1>
 
     <button class="post__create-img-btn">
       ${post?.image !== '' ? '이미지 업로드 완료' : '이미지 업로드'}
@@ -17,6 +20,7 @@ const postCreateHTML = (post: CreatePostRequest) => {
         name="post__input-title"
         placeholder="글 제목을 작성해주세요."
         maxLength="50"
+        value="${post?.title ?? ''}"
       />
       <br />
 
@@ -26,10 +30,14 @@ const postCreateHTML = (post: CreatePostRequest) => {
         name="post__textarea-content"
         placeholder="글 내용을 작성해주세요"
         maxLength="500"
-      ></textarea>
+      >
+        ${post?.content ?? ''}
+      </textarea>
       <br />
 
-      <button class="post__submit-btn">글 생성하기</button>
+      <button class="post__submit-btn">
+        ${mode === 'create' ? '생성하기' : '수정하기'}
+      </button>
     </form>
   `;
 };
@@ -41,7 +49,7 @@ interface IPostCreatePage {
 }
 
 interface IPostCreatePageConstructor {
-  new ($parent: Element): IPostCreatePage;
+  new ($parent: Element, mode: ModeType, post?: Post): IPostCreatePage;
 }
 
 // ****************************************************************************
@@ -51,15 +59,17 @@ interface IPostCreatePageConstructor {
  */
 export const PostCreatePage = function (
   this: IPostCreatePage,
-  $parent: Element
+  $parent: Element,
+  mode: ModeType,
+  post?: Post
 ) {
   const $el = document.createElement('main');
   $el.className = 'PostCreatePage';
 
   this.state = {
-    image: '',
-    title: '',
-    content: '',
+    image: post?.image ?? '',
+    title: post?.title ?? '',
+    content: post?.content ?? '',
   };
 
   this.setState = value => {
@@ -71,7 +81,7 @@ export const PostCreatePage = function (
     $parent.innerHTML = '';
     $parent.appendChild($el);
 
-    $el.innerHTML = postCreateHTML(this.state);
+    $el.innerHTML = postCreateHTML(mode, this.state);
   };
 
   this.render();
@@ -104,14 +114,28 @@ export const PostCreatePage = function (
     }
 
     (async () => {
-      const result = await PostService.createPost({
-        image: this.state.image,
-        title: title.value,
-        content: content.value,
-      });
+      if (mode === 'create') {
+        // 글을 생성합니다.
+        const result = await PostService.createPost({
+          image: this.state.image,
+          title: title.value,
+          content: content.value,
+        });
 
-      if (result) {
-        navigate('/', null);
+        if (result) {
+          navigate('/', null);
+        }
+      } else if (mode === 'edit') {
+        // 글을 수정합니다.
+        const result = await PostService.updatePost(post.postId, {
+          image: this.state.image,
+          title: title.value,
+          content: content.value,
+        });
+
+        if (result) {
+          goBack();
+        }
       }
     })();
   });

@@ -12,4 +12,8 @@ export namespace apiService {
   export async function post<T>(url: string, data: any) {
     return axiosInstance.post<T>(url, data);
   }
+
+  export async function patch<T>(url: string, data: any) {
+    return axiosInstance.patch<T>(url, data);
+  }
 }

@@ -14,8 +14,6 @@ interface IAppConstructor {
 
 export const App = function (this: IApp, $parent: Element) {
   this.route = data => {
-    console.log(data);
-
     const { pathname } = window.location;
 
     $parent.innerHTML = '';
@@ -26,7 +24,9 @@ export const App = function (this: IApp, $parent: Element) {
       const [, , postID] = pathname.split('/');
       new PostDetailPage($parent, postID);
     } else if (pathname === '/create-post') {
-      new PostCreatePage($parent);
+      new PostCreatePage($parent, 'create', data);
+    } else if (pathname === '/edit-post') {
+      new PostCreatePage($parent, 'edit', data);
     }
   };
 

@@ -66,4 +66,16 @@ export namespace PostService {
       .get<FetchPostDetailResponse>(`/post/${postId}`)
       .then(v => v.data);
   }
+
+  /**
+   * 글을 수정합니다.
+   */
+  export async function updatePost(
+    postId: string,
+    body: Partial<CreatePostRequest>
+  ) {
+    return apiService
+      .patch<FetchPostDetailResponse>(`/post/${postId}`, body)
+      .then(v => v.data);
+  }
 }
