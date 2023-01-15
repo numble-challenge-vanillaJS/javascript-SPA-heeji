@@ -9,6 +9,14 @@ interface FetchPostListResponse {
   };
 }
 
+interface FetchPostDetailResponse {
+  code: number;
+  data: {
+    post: Post[];
+    comments: any;
+  };
+}
+
 export interface CreatePostRequest {
   title: string;
   content: string;
@@ -48,5 +56,14 @@ export namespace PostService {
    */
   export async function createPost(body: CreatePostRequest) {
     return apiService.post<CreatePostResponse>('/post', body).then(v => v.data);
+  }
+
+  /**
+   * 글 상세 정보를 불러옵니다.
+   */
+  export async function fetchPost(postId: string) {
+    return apiService
+      .get<FetchPostDetailResponse>(`/post/${postId}`)
+      .then(v => v.data);
   }
 }

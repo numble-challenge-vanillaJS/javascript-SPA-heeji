@@ -3,7 +3,7 @@ import { PostDetailPage } from './pages/PostDetailPage';
 import { PostListPage } from './pages/PostListPage';
 
 interface IApp {
-  route: () => void;
+  route: (data?: any) => void;
 }
 
 interface IAppConstructor {
@@ -13,7 +13,9 @@ interface IAppConstructor {
 // ****************************************************************************
 
 export const App = function (this: IApp, $parent: Element) {
-  this.route = () => {
+  this.route = data => {
+    console.log(data);
+
     const { pathname } = window.location;
 
     $parent.innerHTML = '';
@@ -30,6 +32,8 @@ export const App = function (this: IApp, $parent: Element) {
 
   this.route();
 
-  window.addEventListener('ROUTE_CHANGE', this.route);
+  window.addEventListener('ROUTE_CHANGE', (ev: CustomEvent) => {
+    this.route(ev.detail);
+  });
   window.addEventListener('popstate', this.route);
 } as unknown as IAppConstructor;
