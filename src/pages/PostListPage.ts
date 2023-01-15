@@ -30,7 +30,7 @@ export const PostListPage = function (this: IPostListPage, $parent: Element) {
   const fetchPostList = async () => {
     try {
       const result = await PostService.fetchPostList();
-      this.setState(result.data.posts);
+      this.setState(result.data.posts.reverse());
     } catch (err) {
       // TODO: 에러 경고 스낵바 추가
     }
