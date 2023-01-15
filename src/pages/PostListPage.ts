@@ -21,6 +21,12 @@ interface IPostListPageConstructor {
 export const PostListPage = function (this: IPostListPage, $parent: Element) {
   const $el = document.createElement('main');
   $el.className = 'PostListPage';
+  $el.innerHTML = `
+    <main>
+      <h1>홈페이지</h1>
+      <button class="post__create-btn">글 작성하기</button>
+    </main>
+  `;
 
   this.setState = (value: Post[]) => {
     this.state = value;
@@ -43,16 +49,11 @@ export const PostListPage = function (this: IPostListPage, $parent: Element) {
     $parent.appendChild($el);
   };
 
-  this.render();
-
   $el.addEventListener('click', (ev: MouseEvent) => {
     const target = ev?.target as HTMLElement;
-    const $li = target.closest('li');
-
-    const { postId } = $li.dataset;
-
-    if (postId) {
-      navigate(`/post/${postId}`, null);
+    const isBtnClicked = target.className === 'post__create-btn';
+    if (isBtnClicked) {
+      navigate('/create-post', null);
     }
   });
 } as unknown as IPostListPageConstructor;
