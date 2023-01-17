@@ -6,3 +6,9 @@ export type Post = {
   createdAt: string; // "2023-01-13T18:42:00.453Z"
   updatedAt: string;
 };
+
+export type CommentType = {
+  commentId: string;
+  postId: string;
+  content: string;
+};

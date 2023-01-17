@@ -1,12 +1,17 @@
 import { PostService } from '../api/PostService';
 import { PostDetail } from '../components/PostDetail';
-import { Post } from '../types/Post';
+import { CommentType, Post } from '../types/Post';
 import '../css/postDetail.css';
 import { goBack } from '../router';
 
+interface Data {
+  post: Post;
+  comments: CommentType[];
+}
+
 interface IPostDetailPage {
-  state: Post;
-  setState: (value: Post) => void;
+  state: Data;
+  setState: (value: Data) => void;
   render: () => void;
 }
 
@@ -51,7 +56,7 @@ export const PostDetailPage = function (
 
   const fetchPostDetail = async () => {
     const result = await PostService.fetchPost(postID);
-    this.setState({ ...this.state, ...result.data.post });
+    this.setState({ ...this.state, ...result.data });
   };
 
   fetchPostDetail();
