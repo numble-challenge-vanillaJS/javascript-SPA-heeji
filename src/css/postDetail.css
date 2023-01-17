@@ -1,6 +1,9 @@
 .PostDetailPage {
   display: flex;
   flex-direction: column;
+  width: 100vw;
+  max-width: 900px;
+  margin: auto;
 }
 
 .title__container {

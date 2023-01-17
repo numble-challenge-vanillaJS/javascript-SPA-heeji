@@ -1,3 +1,11 @@
+.PostCreatePage {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  max-width: 900px;
+  margin: auto;
+}
+
 .title__container {
   display: flex;
   justify-content: space-between;
@@ -21,11 +29,6 @@
   font-size: 4rem;
   margin-left: 2rem;
   height: 100%;
-}
-
-.PostCreatePage {
-  display: flex;
-  flex-direction: column;
 }
 
 .form-label {
