@@ -2,6 +2,7 @@ import { PostService } from '../api/PostService';
 import { navigate } from '../router';
 import { Post } from '../types/Post';
 import { formatDate } from '../utils/dateUtil';
+import '../css/postDetail.css';
 
 interface IPostDetail {
   state: Post;
@@ -48,18 +49,22 @@ export const PostDetail = function (
     $postDetail.innerHTML = '';
     $postDetail.innerHTML = `
       <img 
+        class="post__detail-img"
         src="${post.image}" 
         alt="${post.postId} image" 
         onError="this.src='https://img.freepik.com/premium-vector/magnifying-glass-404-isolated-white-background-vector-illustration_230920-1218.jpg?w=826';"
-        width="640px" 
-        height="320px"
+        
       />
-      <h3>${post.title}</h3>
-      <p>${formatDate(new Date(post.createdAt))}</p>
-      <p>${post.content}</p>
+      <section class="post__detail-container">
+        <h3 class="post__detail-title">${post.title}</h3>
+        <p class="post__detail-date">${formatDate(new Date(post.createdAt))}</p>
+        <p class="post__detail-content">${post.content}</p>
+      </section>
 
-      <button class="post__detail__edit-btn">수정하기</button>
-      <button class="post__detail__delete-btn">삭제하기</button>
+      <div class="button-container">
+        <button class="post__detail__edit-btn">수정하기</button>
+        <button class="post__detail__delete-btn">삭제하기</button>
+      </div>
     `;
 
     $parent.appendChild($postDetail);
