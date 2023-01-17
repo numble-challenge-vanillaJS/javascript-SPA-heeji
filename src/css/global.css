@@ -12,10 +12,6 @@ code {
     monospace;
 }
 
-p {
-  margin: 0;
-}
-
 ul {
   list-style: none;
   padding-left: 0;
@@ -30,4 +26,28 @@ h5,
 h6,
 p {
   margin: 0;
+  padding: 0;
+}
+
+button,
+input[type='submit'],
+input[type='reset'] {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+
+textarea {
+  overflow: auto;
+  outline: none;
+
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+
+  resize: none;
 }

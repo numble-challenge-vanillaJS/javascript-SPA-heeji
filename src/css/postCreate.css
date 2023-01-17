@@ -1,0 +1,83 @@
+.title__container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 6rem;
+  padding: 2rem;
+}
+
+.back-button {
+  padding: 1rem 2rem;
+  font-weight: 500;
+  border-radius: 24px;
+  border-color: black;
+  outline: none;
+  text-decoration: none;
+  background-color: black;
+  color: white;
+  font-size: 4rem;
+  margin-left: 2rem;
+  height: 100%;
+}
+
+.PostCreatePage {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  font-size: 3rem;
+}
+
+.post__create-form {
+  display: flex;
+  flex-direction: column;
+  margin: 2rem;
+}
+
+.post__create-img-btn {
+  display: flex;
+  flex: 1;
+  font-size: 4rem;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+  color: white;
+  border-radius: 1rem;
+  padding: 1rem 0;
+  margin: 2rem;
+}
+
+.post__submit-btn {
+  display: flex;
+  flex: 1;
+  font-size: 4rem;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+  color: white;
+  border-radius: 1rem;
+  padding: 1rem 0;
+}
+
+input {
+  height: 60px;
+  border: 2px solid black;
+  font-size: 2rem;
+  padding: 0px 8px;
+}
+
+textarea {
+  border: 2px solid black;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  font-size: 2rem;
+  padding: 8px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  text-align: left;
+  height: 200px;
+}

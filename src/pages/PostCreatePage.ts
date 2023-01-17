@@ -2,19 +2,25 @@ import { CreatePostRequest, PostService } from '../api/PostService';
 import { goBack, navigate } from '../router';
 import { Post } from '../types/Post';
 import { $ } from '../utils/domUtil';
+import '../css/postCreate.css';
 
 type ModeType = 'create' | 'edit';
 
 const postCreateHTML = (mode: ModeType, post: CreatePostRequest) => {
   return `
-    <h1>${mode === 'create' ? '글 작성 페이지' : '글 수정 페이지'}</h1>
+    <nav class="title__container">
+      <button class="back-button">⬅️</button>
+      <h1 class="title">${
+        mode === 'create' ? '글 작성 페이지' : '글 수정 페이지'
+      }</h1>
+    </nav>
 
     <button class="post__create-img-btn">
       ${post?.image !== '' ? '이미지 업로드 완료' : '이미지 업로드'}
     </button>
 
     <form class="post__create-form" action="submit" method="post">
-      <label>제목</label>
+      <label class="form-label">제목</label>
       <input
         type="text"
         name="post__input-title"
@@ -24,15 +30,13 @@ const postCreateHTML = (mode: ModeType, post: CreatePostRequest) => {
       />
       <br />
 
-      <label>내용</label>
+      <label class="form-label">내용</label>
       <textarea
         type="text"
         name="post__textarea-content"
         placeholder="글 내용을 작성해주세요"
         maxLength="500"
-      >
-        ${post?.content ?? ''}
-      </textarea>
+      >${post?.content ?? ''}</textarea>
       <br />
 
       <button class="post__submit-btn">
@@ -99,6 +103,11 @@ export const PostCreatePage = function (
         }
       })();
     }
+
+    const backBtnClicked = target.classList.contains('back-button');
+    if (backBtnClicked) {
+      goBack();
+    }
   });
 
   $el.addEventListener('submit', (ev: SubmitEvent) => {
@@ -109,7 +118,11 @@ export const PostCreatePage = function (
       'textarea[name="post__textarea-content"]'
     ) as HTMLTextAreaElement;
 
-    if (title.value === '' || content.value === '' || this.state.image === '') {
+    if (
+      title.value.trim() === '' ||
+      content.value.trim() === '' ||
+      this.state.image === ''
+    ) {
       return alert('빈 칸을 입력해주세요.');
     }
 
@@ -118,8 +131,8 @@ export const PostCreatePage = function (
         // 글을 생성합니다.
         const result = await PostService.createPost({
           image: this.state.image,
-          title: title.value,
-          content: content.value,
+          title: title.value.trim(),
+          content: content.value.trim(),
         });
 
         if (result) {
@@ -129,8 +142,8 @@ export const PostCreatePage = function (
         // 글을 수정합니다.
         const result = await PostService.updatePost(post.postId, {
           image: this.state.image,
-          title: title.value,
-          content: content.value,
+          title: title.value.trim(),
+          content: content.value.trim(),
         });
 
         if (result) {
