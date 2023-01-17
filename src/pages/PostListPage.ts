@@ -2,6 +2,7 @@ import { PostService } from '../api/PostService';
 import { PostList } from '../components/PostList';
 import { navigate } from '../router';
 import { Post } from '../types/Post';
+import '../css/postList.css';
 
 interface IPostListPage {
   state: Post[];
@@ -40,8 +41,8 @@ export const PostListPage = function (this: IPostListPage, $parent: Element) {
 
   this.render = () => {
     $el.innerHTML = `
-      <h1>홈페이지</h1>
-      <button class="post__create-btn">글 작성하기</button>
+      <h1 class="title">HPNY</h1>
+      <button class="post__create-btn button">글 작성하기</button>
     `;
     new PostList($el, this.state);
     $parent.appendChild($el);
@@ -49,14 +50,9 @@ export const PostListPage = function (this: IPostListPage, $parent: Element) {
 
   $el.addEventListener('click', (ev: MouseEvent) => {
     const target = ev?.target as HTMLElement;
-    const isBtnClicked = target.className === 'post__create-btn';
+    const isBtnClicked = target.classList.contains('post__create-btn');
     if (isBtnClicked) {
-      // FIXME: 제거
-      navigate('/create-post', {
-        detail: {
-          name: 'dog',
-        },
-      });
+      navigate('/create-post', null);
     }
   });
 } as unknown as IPostListPageConstructor;

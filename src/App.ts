@@ -1,6 +1,7 @@
 import { PostCreatePage } from './pages/PostCreatePage';
 import { PostDetailPage } from './pages/PostDetailPage';
 import { PostListPage } from './pages/PostListPage';
+import './css/app.css';
 
 interface IApp {
   route: (data?: any) => void;

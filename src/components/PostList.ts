@@ -41,20 +41,19 @@ export const PostList = function (
       ${this.state
         .map(
           item => `
-            <li class="product" data-post-id="${item.postId}">
-              <div>
+            <li class="post" data-post-id="${item.postId}">
+              <div class="post__container">
                 <img 
+                  class="post__img"
                   src="${item.image}" 
                   alt="${item.postId} image" 
                   onError="this.src='https://img.freepik.com/premium-vector/magnifying-glass-404-isolated-white-background-vector-illustration_230920-1218.jpg?w=826';"
-                  width="100px" 
-                  height="100px" 
+                 
                 />
-                <p>
-                  <h4>${item.title}</h4>
-                  <p>${item.content}</p>
-
-                </p>
+                <div class="post__info">
+                  <h4 class="post__info-title">${item.title}</h4>
+                  <p class="post__info-content">${item.content}</p>
+                </div>
               </div>
             </li>
           `
