@@ -1,6 +1,34 @@
 import { navigate } from '../router';
 import { Post } from '../types/Post';
 
+const postListHTML = (posts: Post[]) => {
+  return `
+  ${posts
+    .map(
+      item => `
+        <li class="post" data-post-id="${item.postId}">
+          <div class="post__container">
+            <img 
+              class="post__img"
+              src="${item.image}" 
+              alt="${item.postId} image" 
+              onError="this.src='https://img.freepik.com/premium-vector/magnifying-glass-404-isolated-white-background-vector-illustration_230920-1218.jpg?w=826';"
+             
+            />
+            <div class="post__info">
+              <h4 class="post__info-title">${item.title}</h4>
+              <p class="post__info-content">${item.content}</p>
+            </div>
+          </div>
+        </li>
+      `
+    )
+    .join('')}
+`;
+};
+
+// ****************************************************************************
+
 interface IPostList {
   state: Post[];
   setState: (value: Post[]) => void;
@@ -36,30 +64,7 @@ export const PostList = function (
     }
 
     $postList.innerHTML = '';
-
-    $postList.innerHTML = `
-      ${this.state
-        .map(
-          item => `
-            <li class="post" data-post-id="${item.postId}">
-              <div class="post__container">
-                <img 
-                  class="post__img"
-                  src="${item.image}" 
-                  alt="${item.postId} image" 
-                  onError="this.src='https://img.freepik.com/premium-vector/magnifying-glass-404-isolated-white-background-vector-illustration_230920-1218.jpg?w=826';"
-                 
-                />
-                <div class="post__info">
-                  <h4 class="post__info-title">${item.title}</h4>
-                  <p class="post__info-content">${item.content}</p>
-                </div>
-              </div>
-            </li>
-          `
-        )
-        .join('')}
-    `;
+    $postList.innerHTML = postListHTML(this.state);
 
     $parent.appendChild($postList);
   };
