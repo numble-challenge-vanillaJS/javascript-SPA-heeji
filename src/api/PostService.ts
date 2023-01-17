@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { apiService } from '.';
-import { Post } from '../types/Post';
+import { CommentType, Post } from '../types/Post';
 
 interface FetchPostListResponse {
   code: number;
@@ -12,8 +12,8 @@ interface FetchPostListResponse {
 interface FetchPostDetailResponse {
   code: number;
   data: {
-    post: Post[];
-    comments: any;
+    post: Post;
+    comments: CommentType[];
   };
 }
 
@@ -84,5 +84,19 @@ export namespace PostService {
    */
   export async function deletePost(postId: string) {
     return apiService._delete(`/post/${postId}`).then(v => v.data);
+  }
+
+  /**
+   * 댓글을 생성합니다.
+   */
+  export async function createComment(postId: string, content: string) {
+    return apiService.post(`/comment/${postId}`, { content });
+  }
+
+  /**
+   * 댓글을 삭제합니다.
+   */
+  export async function deleteComment(commentId: string) {
+    return apiService._delete(`/comment/${commentId}`);
   }
 }

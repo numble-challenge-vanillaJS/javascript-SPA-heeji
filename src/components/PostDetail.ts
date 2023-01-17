@@ -1,18 +1,24 @@
 import { PostService } from '../api/PostService';
 import { navigate } from '../router';
-import { Post } from '../types/Post';
+import { Post, CommentType } from '../types/Post';
 import { formatDate } from '../utils/dateUtil';
 import '../css/postDetail.css';
+import { $ } from '../utils/domUtil';
+
+interface Data {
+  post: Post;
+  comments: CommentType[];
+}
 
 interface IPostDetail {
-  state: Post;
+  state: Data;
   eventHandler: (ev: MouseEvent) => void;
-  setState: (value: Post) => void;
+  setState: (value: Data) => void;
   render: () => void;
 }
 
 interface IPostDetailConstructor {
-  new ($parent: Element, post: Post): IPostDetail;
+  new ($parent: Element, data: Data): IPostDetail;
 }
 
 // ****************************************************************************
@@ -23,20 +29,26 @@ interface IPostDetailConstructor {
 export const PostDetail = function (
   this: IPostDetail,
   $parent: Element,
-  post: Post
+  data: Data
 ) {
+  const { post, comments } = data;
+
   const $postDetail = document.createElement('section');
+  $postDetail.className = 'postDetail';
 
   this.state = {
-    title: '',
-    content: '',
-    image: '',
-    postId: '',
-    createdAt: '',
-    updatedAt: '',
+    post: {
+      title: '',
+      content: '',
+      image: '',
+      postId: '',
+      createdAt: '',
+      updatedAt: '',
+    },
+    comments: [],
   };
 
-  this.setState = (value: Post) => {
+  this.setState = (value: Data) => {
     this.state = value;
     this.render();
   };
@@ -50,29 +62,53 @@ export const PostDetail = function (
     $postDetail.innerHTML = `
       <img 
         class="post__detail-img"
-        src="${post.image}" 
-        alt="${post.postId} image" 
+        src="${this.state.post.image}" 
+        alt="${this.state.post.postId} image" 
         onError="this.src='https://img.freepik.com/premium-vector/magnifying-glass-404-isolated-white-background-vector-illustration_230920-1218.jpg?w=826';"
         
       />
       <section class="post__detail-container">
-        <h3 class="post__detail-title">${post.title}</h3>
-        <p class="post__detail-date">${formatDate(new Date(post.createdAt))}</p>
-        <p class="post__detail-content">${post.content}</p>
+        <h3 class="post__detail-title">${this.state.post.title}</h3>
+        <p class="post__detail-date">${formatDate(
+          new Date(this.state.post.createdAt)
+        )}</p>
+        <p class="post__detail-content">${this.state.post.content}</p>
       </section>
 
       <div class="button-container">
         <button class="post__detail__edit-btn">수정하기</button>
         <button class="post__detail__delete-btn">삭제하기</button>
       </div>
+
+      <section class="comment-section">
+        <h3 class="comment-title">댓글창</h3>
+        <ul>
+          ${this.state.comments
+            .map(
+              v =>
+                `<li class="comment-item" data-comment-id="${v.commentId}">
+                  <p>${v.content}</p>
+                  <button class="comment-delete-btn">🗑️</button>
+                </li>`
+            )
+            .join('')}
+        </ul>
+      </section>
+
+      <form class="comment-form">
+        <input name="comment-input" class="comment-input" />
+        <button class="comment-submit-btn">댓글 생성</button>
+      </form>
     `;
 
     $parent.appendChild($postDetail);
   };
 
+  this.setState(data);
   this.render();
 
   this.eventHandler = (ev: MouseEvent) => {
+    ev.preventDefault();
     const target = ev.target as HTMLElement;
 
     if (target.className === 'post__detail__edit-btn') {
@@ -93,6 +129,40 @@ export const PostDetail = function (
         }
       })();
     }
+
+    if (target.className === 'comment-submit-btn') {
+      const content = $('input[name="comment-input"]') as HTMLTextAreaElement;
+      if (content.value.trim().length === 0) {
+        return alert('댓글을 입력해주세요');
+      }
+
+      (async () => {
+        await PostService.createComment(post.postId, content.value.trim());
+        const result = await PostService.fetchPost(post.postId);
+        this.setState({ ...this.state, ...result.data });
+      })();
+    }
+
+    $postDetail.addEventListener('click', (ev: MouseEvent) => {
+      if (target.className === 'comment-delete-btn') {
+        if (!confirm('댓글을 삭제하시겠습니까?')) {
+          return;
+        }
+
+        const target = ev?.target as HTMLElement;
+        const $li = target.closest('li');
+
+        const { commentId } = $li.dataset;
+
+        if (commentId) {
+          (async () => {
+            await PostService.deleteComment(commentId);
+            const result = await PostService.fetchPost(post.postId);
+            this.setState({ ...this.state, ...result.data });
+          })();
+        }
+      }
+    });
   };
 
   $postDetail.addEventListener('click', this.eventHandler);
