@@ -15,6 +15,42 @@ code {
     monospace;
 }
 
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
 ul {
   list-style: none;
   padding-left: 0;
@@ -53,4 +89,29 @@ textarea {
   box-shadow: none;
 
   resize: none;
+}
+
+:root {
+  --font-size-title: 4rem;
+}
+
+.App {
+  font-family: sans-serif;
+  min-width: 360px;
+  max-width: 640px;
+  min-height: 100vh;
+  margin: 0 auto;
+  position: relative;
+  border: 2px solid red;
+}
+
+.title {
+  font-size: var(--font-size-title);
+  padding: 2rem;
+}
+
+.title__container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
