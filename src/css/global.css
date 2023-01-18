@@ -92,7 +92,10 @@ textarea {
 }
 
 :root {
-  --font-size-title: 4rem;
+  --font-size-title: 2.4rem;
+  --common-padding-size: 1.2rem;
+  --button-font-size: 1.6rem;
+  --input-font-size: 1.4rem;
 }
 
 .App {
@@ -102,12 +105,12 @@ textarea {
   min-height: 100vh;
   margin: 0 auto;
   position: relative;
-  border: 2px solid red;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.6);
 }
 
 .title {
   font-size: var(--font-size-title);
-  padding: 2rem;
+  padding: var(--common-padding-size);
 }
 
 .title__container {
