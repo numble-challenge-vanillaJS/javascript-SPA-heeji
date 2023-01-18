@@ -41,7 +41,7 @@ export const PostListPage = function (this: IPostListPage, $parent: Element) {
 
   this.render = () => {
     $el.innerHTML = `
-      <h1 class="title">HPNY</h1>
+      <h1 class="title">HPNY 🥰</h1>
       <button class="post__create-btn button">글 작성하기</button>
     `;
     new PostList($el, this.state);

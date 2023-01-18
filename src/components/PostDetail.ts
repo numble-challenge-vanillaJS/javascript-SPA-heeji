@@ -12,7 +12,6 @@ const postDetailHTML = (value: Data) => {
       src="${value.post.image}" 
       alt="${value.post.postId} image" 
       onError="this.src='https://img.freepik.com/premium-vector/magnifying-glass-404-isolated-white-background-vector-illustration_230920-1218.jpg?w=826';"
-      
     />
 
     <section class="post__detail-container">
@@ -30,17 +29,23 @@ const postDetailHTML = (value: Data) => {
 
     <section class="comment-section">
       <h3 class="comment-title">댓글창</h3>
-      <ul>
-        ${value.comments
-          .map(
-            v =>
-              `<li class="comment-item" data-comment-id="${v.commentId}">
-                <p>${v.content}</p>
-                <button class="comment-delete-btn">🗑️</button>
-              </li>`
-          )
-          .join('')}
-      </ul>
+      ${
+        value.comments.length === 0
+          ? `<p>댓글이 없어요</p>`
+          : `<ul>
+              ${value.comments
+                .map(
+                  v =>
+                    `<li class="comment-item" data-comment-id="${v.commentId}">
+                      <p>${v.content}</p>
+                      <button class="comment-delete-btn">🗑️</button>
+                    </li>`
+                )
+                .join('')}
+            </ul>
+            `
+      }
+      
     </section>
 
     <form class="comment-form">
@@ -119,9 +124,13 @@ export const PostDetail = function (
     }
 
     (async () => {
-      const result = await PostService.deletePost(postId);
-      if (result) {
-        navigate('/', null);
+      try {
+        const result = await PostService.deletePost(postId);
+        if (result) {
+          navigate('/', null);
+        }
+      } catch (err) {
+        alert('글 삭제를 실패했습니다');
       }
     })();
   }
@@ -147,12 +156,16 @@ export const PostDetail = function (
       }
 
       (async () => {
-        await PostService.createComment(
-          this.state.post.postId,
-          content.value.trim()
-        );
-        const result = await PostService.fetchPost(this.state.post.postId);
-        this.setState({ ...this.state, ...result.data });
+        try {
+          await PostService.createComment(
+            this.state.post.postId,
+            content.value.trim()
+          );
+          const result = await PostService.fetchPost(this.state.post.postId);
+          this.setState({ ...this.state, ...result.data });
+        } catch (err) {
+          alert('댓글 생성에 실패했습니다');
+        }
       })();
     }
 
@@ -168,9 +181,13 @@ export const PostDetail = function (
 
       if (commentId) {
         (async () => {
-          await PostService.deleteComment(commentId);
-          const result = await PostService.fetchPost(this.state.post.postId);
-          this.setState({ ...this.state, ...result.data });
+          try {
+            await PostService.deleteComment(commentId);
+            const result = await PostService.fetchPost(this.state.post.postId);
+            this.setState({ ...this.state, ...result.data });
+          } catch (err) {
+            alert('댓글 삭제를 실패했습니다');
+          }
         })();
       }
     }
