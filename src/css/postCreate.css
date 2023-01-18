@@ -15,7 +15,9 @@
 }
 
 .form-label {
-  font-size: 3rem;
+  font-size: 2rem;
+  font-weight: bold;
+  padding-bottom: 0.4rem;
 }
 
 .post__create-form {
@@ -37,6 +39,41 @@
   margin: 0 2rem;
 }
 
+.image-container {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  margin: 0 2rem;
+}
+
+.post__uploaded-img-btn {
+  font-size: 2.6rem;
+  width: 100%;
+  background-color: black;
+  color: white;
+  max-height: 4.6rem;
+  object-fit: cover;
+  border-radius: 1rem;
+}
+.post__uploaded-img-btn:hover {
+  cursor: pointer !important;
+}
+
+.refresh {
+  background-color: rgba(0, 0, 0, 0.3);
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  vertical-align: middle;
+  position: absolute;
+  color: white;
+  font-size: 1.6rem;
+  line-height: 4.6rem;
+  border-radius: 1rem;
+}
+
 .post__submit-btn {
   display: flex;
   flex: 1;
@@ -54,6 +91,10 @@ input {
   border: 2px solid black;
   font-size: 2rem;
   padding: 0px 8px;
+  margin-bottom: 2rem;
+}
+input:focus {
+  border: 2px solid blue !important;
 }
 
 textarea {
@@ -66,4 +107,7 @@ textarea {
   overflow-y: hidden;
   text-align: left;
   height: 200px;
+}
+textarea:focus {
+  border: 2px solid blue !important;
 }

@@ -4,9 +4,9 @@ import { Post } from '../types/Post';
 import { $ } from '../utils/domUtil';
 import '../css/postCreate.css';
 
-type ModeType = 'create' | 'edit';
+const postCreateHTML = (mode: ModeType, value: PostCreateState) => {
+  const { post, isImageLoading } = value;
 
-const postCreateHTML = (mode: ModeType, post: CreatePostRequest) => {
   return `
     <nav class="title__container">
       <button class="back-button">⬅️</button>
@@ -15,9 +15,16 @@ const postCreateHTML = (mode: ModeType, post: CreatePostRequest) => {
       }</h1>
     </nav>
 
-    <button class="post__create-img-btn">
-      ${post?.image !== '' ? '이미지 업로드 완료' : '이미지 업로드'}
-    </button>
+    ${
+      post.image == ''
+        ? `<button class="post__create-img-btn">
+            ${isImageLoading ? '로딩중...' : '이미지 업로드'}
+          </button>`
+        : `<div class="image-container">
+            <img class="post__uploaded-img-btn" src="${post?.image}" />
+              <button class="refresh">새로고침</button>
+          </div>`
+    }
 
     <form class="post__create-form" action="submit" method="post">
       <label class="form-label">제목</label>
@@ -46,9 +53,18 @@ const postCreateHTML = (mode: ModeType, post: CreatePostRequest) => {
   `;
 };
 
+// ****************************************************************************
+
+type ModeType = 'create' | 'edit';
+
+type PostCreateState = {
+  isImageLoading: boolean;
+  post: CreatePostRequest;
+};
+
 interface IPostCreatePage {
-  state: CreatePostRequest;
-  setState: (value: Partial<CreatePostRequest>) => void;
+  state: PostCreateState;
+  setState: (value: Partial<PostCreateState>) => void;
   render: () => void;
 }
 
@@ -71,9 +87,12 @@ export const PostCreatePage = function (
   $el.className = 'PostCreatePage';
 
   this.state = {
-    image: post?.image ?? '',
-    title: post?.title ?? '',
-    content: post?.content ?? '',
+    isImageLoading: false,
+    post: {
+      image: post?.image ?? '',
+      title: post?.title ?? '',
+      content: post?.content ?? '',
+    },
   };
 
   this.setState = value => {
@@ -92,14 +111,26 @@ export const PostCreatePage = function (
 
   $el.addEventListener('click', (ev: MouseEvent) => {
     const target = ev?.target as HTMLElement;
+    const imgUploadBtnClicked = ['refresh', 'post__create-img-btn'].includes(
+      target.className
+    );
 
-    const imgUploadBtnClicked = target.className === 'post__create-img-btn';
     if (imgUploadBtnClicked) {
       (async () => {
-        const result = await PostService.getRandomImgURL();
+        try {
+          this.setState({ isImageLoading: true });
 
-        if (result) {
-          this.setState({ image: result.urls.regular });
+          const result = await PostService.getRandomImgURL();
+
+          if (result) {
+            this.setState({
+              post: { ...this.state.post, image: result.urls.regular },
+            });
+          }
+        } catch (err) {
+          alert('이미지를 생성하지 못했습니다.');
+        } finally {
+          this.setState({ isImageLoading: false });
         }
       })();
     }
@@ -118,38 +149,60 @@ export const PostCreatePage = function (
       'textarea[name="post__textarea-content"]'
     ) as HTMLTextAreaElement;
 
-    if (
-      title.value.trim() === '' ||
-      content.value.trim() === '' ||
-      this.state.image === ''
-    ) {
-      return alert('빈 칸을 입력해주세요.');
+    if (this.state.post.image === '') {
+      return alert('이미지를 업로드 해주세요');
+    } else if (title.value.trim() === '') {
+      return alert('제목을 입력해주세요');
+    } else if (content.value.trim() === '') {
+      return alert('내용을 입력해주세요');
     }
 
     (async () => {
       if (mode === 'create') {
         // 글을 생성합니다.
-        const result = await PostService.createPost({
-          image: this.state.image,
-          title: title.value.trim(),
-          content: content.value.trim(),
-        });
+        try {
+          const result = await PostService.createPost({
+            image: this.state.post.image,
+            title: title.value.trim(),
+            content: content.value.trim(),
+          });
 
-        if (result) {
-          navigate('/', null);
+          if (result) {
+            navigate('/', null);
+          }
+        } catch (err) {
+          alert('글을 생성하지 못했습니다.');
         }
       } else if (mode === 'edit') {
         // 글을 수정합니다.
-        const result = await PostService.updatePost(post.postId, {
-          image: this.state.image,
-          title: title.value.trim(),
-          content: content.value.trim(),
-        });
+        try {
+          const result = await PostService.updatePost(post.postId, {
+            image: this.state.post.image,
+            title: title.value.trim(),
+            content: content.value.trim(),
+          });
 
-        if (result) {
-          goBack();
+          if (result) {
+            goBack();
+          }
+        } catch (err) {
+          alert('글을 수정하지 못했습니다.');
         }
       }
     })();
+  });
+
+  $el.addEventListener('change', (ev: Event) => {
+    const title = $('input[name="post__input-title"]') as HTMLInputElement;
+    const content = $(
+      'textarea[name="post__textarea-content"]'
+    ) as HTMLTextAreaElement;
+
+    if (this.state.post.title !== title.value) {
+      this.setState({ post: { ...this.state.post, title: title.value } });
+    }
+    if (this.state.post.content !== content.value) {
+      this.setState({ post: { ...this.state.post, content: content.value } });
+    }
   });
 } as unknown as IPostCreatePageConstructor;
