@@ -1,20 +1,6 @@
 .PostDetailPage {
   display: flex;
   flex-direction: column;
-  width: 100vw;
-  max-width: 900px;
-  margin: auto;
-}
-
-.title__container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.title {
-  font-size: 6rem;
-  padding: 2rem;
 }
 
 .post__detail-img {
