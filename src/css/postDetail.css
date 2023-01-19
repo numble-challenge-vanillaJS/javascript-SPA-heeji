@@ -50,9 +50,10 @@
 
 .comment-form {
   display: flex;
+    flex: 1;
   flex-direction: row;
   align-items: center;
-  margin: var(--common-padding-size);
+  padding: var(--common-padding-size);
 }
 
 .comment-input {
